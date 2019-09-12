@@ -1,0 +1,83 @@
+<html>
+    <head>
+        <title>Books Admin</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <h1>Books Management</h1>
+        <form>  
+            <input type="text" placeholder="Enter title" id="title"/>
+            <input type="text" placeholder="Enter author" id="author"/>
+            <button id="addBookButton">Add Book</button>
+        </form>
+        <table id="books">
+            <tr>
+                <td>Title</td>
+                <td>Author</td>
+                <td></td>
+            </tr>
+        </table>
+    </body>
+</html>
+<script>
+    function getBooks(){
+        $.ajax({
+            url:'/api/books',
+            headers: {
+                "Authorization": "Basic " + btoa("test" + ":" + "12345")
+            },
+            success:function(books){
+                books.forEach((book)=>{
+                    $("table").append(`<tr>
+                            <td>${book.title}</td>
+                            <td>${book.author}</td>
+                            <td><button onclick="deleteBook('${book._id}')">Delete</button></td>
+                        </tr>`)
+                })
+            },
+            error:function(err){
+                console.log("Failed to load data")
+            }
+        })
+    }
+
+    getBooks();
+
+    var deleteBook=(id)=>{
+        $.ajax({
+            url:`/api/books/${id}`,
+            method:'DELETE',
+            headers: {
+                "Authorization": "Basic " + btoa("test" + ":" + "12345")
+            },
+            success:function(book){
+                alert("Book is deleted successfully")
+            },
+            error:function(book){
+                alert("Failed to delete book")
+            }
+        })
+    }
+
+    $("#addBookButton").on("click",function(){
+        var title=$("#title").val();
+        var author=$("#author").val()
+
+        $.ajax({
+            url:'/api/books',
+            method:'POST',
+            headers: {
+                "Authorization": "Basic " + btoa("test" + ":" + "12345")
+            },
+            data:`title=${title}&author=${author}`,
+            success:function(book){
+                alert("Book is saved successfully")
+            },
+            error:function(book){
+                alert("Failed to save book")
+            }
+        })
+
+        alert(title);
+    })
+</script>

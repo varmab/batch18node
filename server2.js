@@ -24,6 +24,13 @@ var books=[
     }
 ]
 
+var users=[
+    {
+        id:1,
+        name:"Varma"
+    }
+]
+
 app.use(express.static("public"))
 
 app.get("/",function(req,res){
@@ -64,6 +71,43 @@ app.put("/api/books/:id",function(req,res){
 
     res.send(book);
 })
+
+
+app.get("/api/users",function(req,res){
+    res.send(users);
+})
+
+//title=ReactPro&author=Varma&id=4
+
+app.post("/api/users",function(req,res){
+    var newUser=req.body;
+    console.log(newUser)
+    users.push(newUser)
+    res.send(users)
+})
+
+app.delete("/api/users/:id",function(req,res){
+    var id=req.params.id;
+
+    var newUsers=users.filter((user)=>{
+        return user.id!=id;
+    })
+
+    res.send(newUsers);
+})
+
+app.put("/api/users/:id",function(req,res){
+    var id=req.params.id;
+
+    var user=users.find((user)=>{
+        return user.id==id;
+    })
+
+    user.name=req.body.name;
+
+    res.send(user);
+})
+
 
 app.listen(5000,()=>{
     console.log("Batch 18 Server is started")
