@@ -1,6 +1,9 @@
 var mongoose=require("mongoose");
 mongoose.connect("mongodb://localhost:27017/batch18");
 
+//Support for ES6 Promises
+mongoose.Promise=global.Promise;
+
 var bookSchema=mongoose.Schema({
     title:{
         type:String,
